@@ -406,7 +406,15 @@ namespace MigraDoc.Rendering
                 bool firstProbe = probeRow == _startRow;
                 probeRow = _connectedRowsMap[probeRow];
                 // Don't take any Rows higher then MaxElementHeight
-                probeHeight = _bottomBorderMap[probeRow + 1] - offset;
+                if (_bottomBorderMap.ContainsKey(probeRow + 1))
+                    probeHeight = _bottomBorderMap[probeRow + 1] - offset;
+                else
+                {
+                    var maxKey = 0;
+                    foreach(int key in _bottomBorderMap.Keys)
+                        maxKey = Math.Max(key, maxKey);
+                    probeHeight = _bottomBorderMap[maxKey] - offset;
+                }
                 // First test whether MaxElementHeight has been set.
                 if (MaxElementHeight > 0 && firstProbe && probeHeight > MaxElementHeight - Tolerance)
                     probeHeight = MaxElementHeight - Tolerance;
